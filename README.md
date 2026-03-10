@@ -64,6 +64,26 @@ This project addresses the needs of a real estate company seeking an internal so
 - **Mortgage & Cost Calculators** – Client-facing calculation tools
 - **Property Inspection & Maintenance Logs** – Track property conditions
 
+### Business Intelligence
+
+- **Executive Dashboard** – Company performance at-a-glance
+- **Agent Performance Analytics** – Identify top-closing agents
+- **Inventory Analysis** – Flag properties sitting too long unsold
+- **Revenue Reporting** – Monthly and yearly revenue reports
+- **Lead Conversion Metrics** – Track lead-to-sale conversion rates
+- **Neighborhood Performance** – Identify best-performing areas
+- **Price Trend Data** – Historical and current pricing analysis
+
+### Administrative Features
+
+- **Role-Based Access Control** – Granular permissions per user type
+- **Audit Trail** – Complete log of all system changes
+- **Agent Onboarding Flow** – Streamlined new agent setup
+- **Goal & Target Management** – Set and track monthly sales targets
+- **Expense Tracking** – Monitor marketing and photography costs per property
+- **Tool Integration** – Connect with Gmail, Outlook, WhatsApp, and calendar systems
+
+
 ## User Roles & Permissions
 
 | Role | Access Level | Key Responsibilities |
