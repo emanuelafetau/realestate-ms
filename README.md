@@ -45,7 +45,24 @@ This project addresses the needs of a real estate company seeking an internal so
 - **Contract and Document Storage** – Securely store contracts and related documents
 - **Commission Calculator** – Calculate commissions per agent per deal
 
+### Client Management
 
+- *Full Client History* – Log every interaction including calls, emails, and visits
+- *Automated Follow-up Reminders* – "Call this client back in 3 days" notifications
+- *Client Preference Profiles* – Track specific property requirements
+- *Relationship Management* – Birthday/anniversary reminders
+- *Pipeline View* – Visual representation of each client's buying/renting process stage
+- *Internal Notes* – Private staff-only notes on clients and properties
+
+### Agent Tools
+
+- *Personal Dashboard* – Individual agent portfolio overview
+- *Task Manager* – Auto-generated daily to-do lists
+- *Mobile-Friendly Interface* – Update information on-the-go
+- *Commission Tracking* – View personal earnings
+- *Performance Stats* – Compare against team averages
+- *Mortgage & Cost Calculators* – Client-facing calculation tools
+- *Property Inspection & Maintenance Logs* – Track property conditions
 
 ## User Roles & Permissions
 
