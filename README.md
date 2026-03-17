@@ -101,31 +101,12 @@ This project addresses the needs of a real estate company seeking an internal so
 /
 ├── docs/
 │   ├── requirements/         # Requirements documentation
-│   ├── design/               # System design documents
 │   ├── diagrams/             # UML and process diagrams
 │   └── meeting-notes/        # Team meeting documentation
 ├── src/
-│   ├── frontend/             # Frontend application code
-│   ├── backend/              # Backend API and services
-│   └── database/             # Database schemas and migrations
-├── tests/                    # Test suites
-└── README.md                 # This file
+│   
+└── README.md                 
 ```
-
-## Getting Started
-
-### Prerequisites
-
-
-
-### Installation
-
-1. Clone the repository
-2. Follow setup instructions (to be added during development)
-
-## Design Philosophy
-
-> "The most important thing to get right is the CRM + pipeline view. Most real estate companies lose deals simply because nobody followed up. A system that makes sure every lead is contacted, every client is remembered, and every deal moves forward is worth more than any fancy visualization feature."
 
 ## Team Members
 
