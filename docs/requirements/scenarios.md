@@ -1,4 +1,4 @@
-# User Stories
+# Scenarios
 ---
 
 ## Sara — Real Estate Agent
@@ -17,11 +17,11 @@ At the end of a successful deal, Sara has to manually calculate her commission a
 
 ---
 
-## Marco — Senior Real Estate Agent
+## Marko — Senior Real Estate Agent
 
-Marco is one of the most experienced agents at the agency with over 15 years in the industry. He built his client base entirely through personal relationships and is proud that many of his clients come back to him years later when they are ready to buy again. He is not a heavy technology user — he still keeps a paper notebook — but he is open to using a system if it genuinely saves him time.
+Marko is one of the most experienced agents at the agency with over 15 years in the industry. He built his client base entirely through personal relationships and is proud that many of his clients come back to him years later when they are ready to buy again. He is not a heavy technology user — he still keeps a paper notebook — but he is open to using a system if it genuinely saves him time.
 
-Marco's biggest problem is long-term clients. He meets a couple who are interested in buying but are not ready for another four months. He makes a mental note to follow up, but four months is a long time. By the time he remembers, they have already signed with someone else. He needs the system to remind him when it is time to reach out to a client again, with enough context to pick up the conversation as if no time has passed.
+Marko's biggest problem is long-term clients. He meets a couple who are interested in buying but are not ready for another four months. He makes a mental note to follow up, but four months is a long time. By the time he remembers, they have already signed with someone else. He needs the system to remind him when it is time to reach out to a client again, with enough context to pick up the conversation as if no time has passed.
 
 He also manages several properties that have been sitting on the market for a long time. He is not always aware of how long until an owner calls to complain. He needs the system to alert him when a property he is responsible for has not had any viewings or activity for more than a set number of days, so he can take action before the relationship with the owner becomes strained.
 
