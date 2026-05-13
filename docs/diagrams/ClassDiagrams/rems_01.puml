@@ -1,0 +1,120 @@
+@startuml REMS_01_Client
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam ArrowColor #555555
+skinparam classHeaderBackgroundColor #D1C4E9
+skinparam classBorderColor #7E57C2
+skinparam packageBackgroundColor #F5F0FF
+skinparam packageBorderColor #7E57C2
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #FBC02D
+skinparam linetype polyline
+
+title REMS – Client Domain
+
+' ═══════════════════════════════
+' ENUMS
+' ═══════════════════════════════
+
+enum ClientStatus {
+  NEW_LEAD
+  ACTIVE
+  LONG_TERM_NURTURING
+  UNDER_OFFER
+  CLOSED
+  INACTIVE
+}
+
+enum InteractionChannel {
+  PHONE_CALL
+  WHATSAPP
+  IN_PERSON
+}
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  VILLA
+  COMMERCIAL
+  LAND
+}
+
+' ═══════════════════════════════
+' CLASSES
+' ═══════════════════════════════
+
+class Client {
+  + id : UUID
+  + fullName : String
+  + phone : String
+  + whatsApp : String
+  + email : String
+  + budgetMin : Decimal
+  + budgetMax : Decimal
+  + preferredLocation : String
+  + preferredPropertyType : PropertyType
+  + purchaseTimeframe : String
+  + leadSource : String
+  + status : ClientStatus
+  + lastContactedAt : DateTime
+  + followUpReminderDays : Int
+  + isLongTerm : Boolean
+  + longTermCheckInDays : Int
+  + createdAt : DateTime
+  + updatedAt : DateTime
+  --
+  + updateStatus(status : ClientStatus) : void
+  + logInteraction(interaction : Interaction) : void
+  + setFollowUpReminder(days : Int) : void
+  + launchWhatsApp() : void
+  + launchPhoneCall() : void
+}
+
+class Interaction {
+  + id : UUID
+  + clientId : UUID
+  + channel : InteractionChannel
+  + note : String
+  + occurredAt : DateTime
+  + createdAt : DateTime
+  --
+  + save() : void
+}
+
+class ClientStatusHistory {
+  + id : UUID
+  + clientId : UUID
+  + previousStatus : ClientStatus
+  + newStatus : ClientStatus
+  + changedAt : DateTime
+}
+
+note right of ClientStatusHistory
+  Immutable audit trail.
+  Status changes cannot be backdated.
+end note
+
+' ═══════════════════════════════
+' RELATIONSHIPS
+' ═══════════════════════════════
+
+Client "1" *-- "0..*" Interaction : logs
+Client "1" *-- "0..*" ClientStatusHistory : status history
+
+Client --> ClientStatus : status
+Client --> PropertyType : preferred type
+Interaction --> InteractionChannel : channel
+
+' ═══════════════════════════════
+' CROSS-DIAGRAM REFERENCES
+' ═══════════════════════════════
+
+note bottom of Client
+  References:
+  - ClientPropertyLink (Property Diagram)
+  - Viewing (Viewing Diagram)
+  - Deal (Deal Diagram)
+end note
+
+@enduml
