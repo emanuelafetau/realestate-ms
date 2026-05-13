@@ -1,0 +1,131 @@
+@startuml REMS_03_Viewing
+
+'──────────────────────────────────────────────────
+' REMS – Viewing Domain
+'──────────────────────────────────────────────────
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam ArrowColor #555555
+skinparam classHeaderBackgroundColor #BBDEFB
+skinparam classBorderColor #1565C0
+skinparam packageBackgroundColor #F0F7FF
+skinparam packageBorderColor #1565C0
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #FBC02D
+skinparam linetype polyline
+
+title REMS – Viewing Domain
+
+' ═══════════════════════════════
+' ENUMS
+' ═══════════════════════════════
+
+enum ViewingStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
+
+enum ClientReaction {
+  VERY_INTERESTED
+  INTERESTED
+  UNDECIDED
+  NOT_INTERESTED
+}
+
+' ═══════════════════════════════
+' CLASSES
+' ═══════════════════════════════
+
+class Viewing {
+  + id : UUID
+  + clientId : UUID
+  + propertyId : UUID
+  + scheduledAt : DateTime
+  + meetingLocation : String
+  + status : ViewingStatus
+  + conductedByAgent : String
+  + calendarEventId : String
+  + createdAt : DateTime
+  --
+  + cancel(reason : String) : void
+  + reschedule(newDateTime : DateTime) : void
+  + logFeedback(feedback : ViewingFeedback) : void
+  + syncToCalendar() : void
+}
+
+class ViewingFeedback {
+  + id : UUID
+  + viewingId : UUID
+  + reaction : ClientReaction
+  + notes : String
+  + followUpAction : String
+  + loggedAt : DateTime
+}
+
+class ViewingHistory {
+  + id : UUID
+  + viewingId : UUID
+  + changeType : String
+  + oldValue : String
+  + newValue : String
+  + changedAt : DateTime
+}
+
+note right of ViewingHistory
+  Records every
+  reschedule and
+  cancellation event.
+end note
+
+' ═══════════════════════════════
+' CROSS-DIAGRAM STUBS
+' ═══════════════════════════════
+
+class Client <<(R,#AAAAAA) ref>> {
+  + id : UUID
+  + fullName : String
+}
+
+note right of Client
+  Defined in
+  Diagram 1: Client
+end note
+
+class Property <<(R,#AAAAAA) ref>> {
+  + id : UUID
+  + askingPrice : Decimal
+}
+
+note right of Property
+  Defined in
+  Diagram 2: Property
+end note
+
+' ═══════════════════════════════
+' RELATIONSHIPS
+' ═══════════════════════════════
+
+Viewing "0..*" --> "1" Client : client
+Viewing "0..*" --> "1" Property : property
+
+Viewing "1" *-- "0..1" ViewingFeedback : feedback
+Viewing "1" *-- "0..*" ViewingHistory : history
+
+Viewing --> ViewingStatus : status
+ViewingFeedback --> ClientReaction : reaction
+
+' ═══════════════════════════════
+' CROSS-DIAGRAM REFERENCES
+' ═══════════════════════════════
+
+note bottom of Viewing
+  References:
+  - Client (Diagram 1)
+  - Property (Diagram 2)
+  - Deal (Diagram 4)
+end note
+
+@enduml
