@@ -1,0 +1,166 @@
+@startuml REMS_04_Deal
+
+'──────────────────────────────────────────────────
+' REMS – Deal Domain
+'──────────────────────────────────────────────────
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam ArrowColor #555555
+skinparam classHeaderBackgroundColor #FFE0B2
+skinparam classBorderColor #E65100
+skinparam packageBackgroundColor #FFFAF0
+skinparam packageBorderColor #E65100
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #FBC02D
+skinparam linetype polyline
+
+title REMS – Deal Domain
+
+' ═══════════════════════════════
+' ENUMS
+' ═══════════════════════════════
+
+enum DealStage {
+  OFFER_INITIATED
+  OWNER_NOTIFIED
+  NEGOTIATION_IN_PROGRESS
+  VERBAL_AGREEMENT_REACHED
+  CONTRACTS_DRAFTED
+  SECURITY_DEPOSIT_PAID
+  LEGAL_REVIEW_UNDERWAY
+  FINAL_SALE_CONTRACT_SIGNED
+  DEAL_CLOSED
+  CLOSED_LOST
+}
+
+enum DealRisk {
+  ON_TRACK
+  AT_RISK
+  STALLED
+}
+
+enum DealDocumentType {
+  EXCLUSIVE_LISTING_CONTRACT
+  SHOWING_CONTRACT
+  PRELIMINARY_AGREEMENT
+  DEPOSIT_CONTRACT
+  FINAL_SALE_CONTRACT
+}
+
+' ═══════════════════════════════
+' CLASSES
+' ═══════════════════════════════
+
+class Deal {
+  + id : UUID
+  + clientId : UUID
+  + propertyId : UUID
+  + ownerName : String
+  + ownerContact : String
+  + currentStage : DealStage
+  + riskStatus : DealRisk
+  + riskReason : String
+  + agreedPrice : Decimal
+  + commissionRate : Decimal
+  + expectedCommission : Decimal
+  + stageUpdatedAt : DateTime
+  + stallAlertDays : Int
+  + createdAt : DateTime
+  + updatedAt : DateTime
+  --
+  + advanceStage(stage : DealStage) : void
+  + flagAtRisk(reason : String) : void
+  + closeLost() : void
+  + calculateCommission() : Decimal
+  + isStalled() : Boolean
+}
+
+class DealNote {
+  + id : UUID
+  + dealId : UUID
+  + content : String
+  + involvedParties : String
+  + nextStep : String
+  + loggedAt : DateTime
+  + loggedBy : String
+}
+
+class DealStakeholder {
+  + id : UUID
+  + dealId : UUID
+  + role : String
+  + name : String
+  + contact : String
+  + addedAt : DateTime
+}
+
+note right of DealStakeholder
+  role values:
+  - BUYER_CLIENT
+  - PROPERTY_OWNER
+  - AGENT_LAWYER
+  - BUYER_LAWYER
+  - COLLEAGUE_AGENT
+end note
+
+class DealDocument {
+  + id : UUID
+  + dealId : UUID
+  + type : DealDocumentType
+  + fileUrl : String
+  + uploadedAt : DateTime
+  + uploadedBy : String
+}
+
+' ═══════════════════════════════
+' CROSS-DIAGRAM STUBS
+' ═══════════════════════════════
+
+class Client <<(R,#AAAAAA) ref>> {
+  + id : UUID
+  + fullName : String
+}
+
+note right of Client
+  Defined in
+  Diagram 1: Client
+end note
+
+class Property <<(R,#AAAAAA) ref>> {
+  + id : UUID
+  + status : PropertyStatus
+}
+
+note right of Property
+  Defined in
+  Diagram 2: Property
+end note
+
+' ═══════════════════════════════
+' RELATIONSHIPS
+' ═══════════════════════════════
+
+Deal "0..*" --> "1" Client : buyer
+Deal "0..*" --> "1" Property : property
+
+Deal "1" *-- "0..*" DealNote : notes
+Deal "1" *-- "0..*" DealStakeholder : stakeholders
+Deal "1" *-- "0..*" DealDocument : documents
+
+Deal --> DealStage : stage
+Deal --> DealRisk : risk
+
+DealDocument --> DealDocumentType : type
+
+' ═══════════════════════════════
+' CROSS-DIAGRAM REFERENCES
+' ═══════════════════════════════
+
+note bottom of Deal
+  References:
+  - Commission (Diagram 5)
+  - Expense (Diagram 5)
+end note
+
+@enduml
