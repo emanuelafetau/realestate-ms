@@ -1,0 +1,145 @@
+@startuml REMS_05_Finance
+
+'──────────────────────────────────────────────────
+' REMS – Finance Domain
+'──────────────────────────────────────────────────
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam ArrowColor #555555
+skinparam classHeaderBackgroundColor #F8BBD0
+skinparam classBorderColor #C2185B
+skinparam packageBackgroundColor #FFF5F8
+skinparam packageBorderColor #C2185B
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #FBC02D
+skinparam linetype polyline
+
+title REMS – Finance Domain
+
+' ═══════════════════════════════
+' ENUMS
+' ═══════════════════════════════
+
+enum CommissionStatus {
+  PENDING
+  PARTIALLY_PAID
+  FULLY_PAID
+}
+
+enum ExpenseCategory {
+  PHOTOGRAPHY
+  DIGITAL_MARKETING
+  PRINT_MARKETING
+  FUEL_AND_TRAVEL
+  NOTARY_OR_BROKER_FEE
+  OTHER
+}
+
+' ═══════════════════════════════
+' CLASSES
+' ═══════════════════════════════
+
+class Commission {
+  + id : UUID
+  + dealId : UUID
+  + rate : Decimal
+  + expectedAmount : Decimal
+  + receivedAmount : Decimal
+  + status : CommissionStatus
+  + taxFlagTriggered : Boolean
+  + updatedAt : DateTime
+  --
+  + recordPayment(amount : Decimal) : void
+  + checkTaxThreshold(annualTotal : Decimal) : Boolean
+}
+
+class Expense {
+  + id : UUID
+  + dealId : UUID
+  + category : ExpenseCategory
+  + amount : Decimal
+  + description : String
+  + loggedAt : DateTime
+}
+
+class FinancialSummary {
+  + periodStart : Date
+  + periodEnd : Date
+  + totalExpectedCommissions : Decimal
+  + totalReceived : Decimal
+  + totalExpenses : Decimal
+  + netEarnings : Decimal
+  --
+  + generateForPeriod(start : Date, end : Date) : FinancialSummary
+  + exportToPDF() : Blob
+  + exportToCSV() : Blob
+}
+
+note right of FinancialSummary
+  Computed view only.
+
+  Generated from
+  Commission and
+  Expense records.
+
+  Not stored directly.
+end note
+
+class SalesTarget {
+  + id : UUID
+  + agentId : UUID
+  + periodType : String
+  + dealTarget : Int
+  + commissionTarget : Decimal
+  + dealsAchieved : Int
+  + commissionAchieved : Decimal
+  --
+  + updateProgress() : void
+}
+
+note right of SalesTarget
+  periodType:
+  MONTHLY or
+  QUARTERLY
+end note
+
+' ═══════════════════════════════
+' CROSS-DIAGRAM STUB
+' ═══════════════════════════════
+
+class Deal <<(R,#AAAAAA) ref>> {
+  + id : UUID
+  + agreedPrice : Decimal
+  + commissionRate : Decimal
+}
+
+note right of Deal
+  Defined in
+  Diagram 4: Deal
+end note
+
+' ═══════════════════════════════
+' RELATIONSHIPS
+' ═══════════════════════════════
+
+Deal "1" *-- "1" Commission : commission
+Deal "1" *-- "0..*" Expense : expenses
+
+Commission --> CommissionStatus : status
+Expense --> ExpenseCategory : category
+
+Commission "0..*" ..> FinancialSummary : included in
+Expense "0..*" ..> FinancialSummary : included in
+
+' ═══════════════════════════════
+' CROSS-DIAGRAM REFERENCES
+' ═══════════════════════════════
+
+note bottom of FinancialSummary
+  References:
+  - Deal (Diagram 4)
+  - Reporting Dashboard (Diagram 6)
+end note
+
+@enduml
