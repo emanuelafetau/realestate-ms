@@ -1,0 +1,141 @@
+@startuml REMS_02_Property
+
+'──────────────────────────────────────────────────
+' REMS – Property Domain
+'──────────────────────────────────────────────────
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam ArrowColor #555555
+skinparam classHeaderBackgroundColor #C8E6C9
+skinparam classBorderColor #388E3C
+skinparam packageBackgroundColor #F1F8F1
+skinparam packageBorderColor #388E3C
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #FBC02D
+skinparam linetype polyline
+
+title REMS – Property Domain
+
+' ═══════════════════════════════
+' ENUMS
+' ═══════════════════════════════
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  VILLA
+  COMMERCIAL
+  LAND
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  UNDER_OFFER
+  SOLD
+  WITHDRAWN
+  ARCHIVED
+}
+
+' ═══════════════════════════════
+' CLASSES
+' ═══════════════════════════════
+
+class Property {
+  + id : UUID
+  + type : PropertyType
+  + askingPrice : Decimal
+  + location : String
+  + area : String
+  + floorArea : Decimal
+  + numberOfRooms : Int
+  + status : PropertyStatus
+  + ownerName : String
+  + ownerContact : String
+  + listingExpiryDate : Date
+  + internalNotes : String
+  + daysOnMarket : Int
+  + isArchived : Boolean
+  + createdAt : DateTime
+  + updatedAt : DateTime
+  --
+  + updateStatus(status : PropertyStatus) : void
+  + archive() : void
+  + isStale(thresholdDays : Int) : Boolean
+}
+
+class PriceHistory {
+  + id : UUID
+  + propertyId : UUID
+  + previousPrice : Decimal
+  + newPrice : Decimal
+  + changedAt : DateTime
+  + note : String
+}
+
+class PropertyMedia {
+  + id : UUID
+  + propertyId : UUID
+  + fileUrl : String
+  + fileType : String
+  + label : String
+  + uploadedAt : DateTime
+}
+
+class ClientPropertyLink {
+  + id : UUID
+  + clientId : UUID
+  + propertyId : UUID
+  + linkType : String
+  + shownAt : Date
+  + reaction : String
+  + note : String
+}
+
+note right of ClientPropertyLink
+  linkType:
+  SUGGESTED or SHOWN
+
+  Tracks properties
+  recommended or shown
+  to clients.
+end note
+
+' ═══════════════════════════════
+' CROSS-DIAGRAM STUB
+' ═══════════════════════════════
+
+class Client <<(R,#AAAAAA) ref>> {
+  + id : UUID
+  + fullName : String
+}
+
+note right of Client
+  Defined in
+  Diagram 1: Client
+end note
+
+' ═══════════════════════════════
+' RELATIONSHIPS
+' ═══════════════════════════════
+
+Property "1" *-- "0..*" PriceHistory : price history
+Property "1" *-- "0..*" PropertyMedia : media
+
+Property "1" -- "0..*" ClientPropertyLink : client links
+Client "1" -- "0..*" ClientPropertyLink : related properties
+
+Property --> PropertyType : type
+Property --> PropertyStatus : status
+
+' ═══════════════════════════════
+' CROSS-DIAGRAM REFERENCES
+' ═══════════════════════════════
+
+note bottom of Property
+  References:
+  - Viewing (Diagram 3)
+  - Deal (Diagram 4)
+end note
+
+@enduml
